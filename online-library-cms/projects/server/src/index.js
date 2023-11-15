@@ -2,19 +2,28 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
+const router = require("./routes");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
+  cors(
+  //   {
+  //   origin: [
+  //     process.env.WHITELISTED_DOMAIN &&
+  //       process.env.WHITELISTED_DOMAIN.split(","),
+  //   ],
+  // }
+  )
 );
 
 app.use(express.json());
+
+// multer
+app.use(
+  "/src/Public/book",
+  express.static(join(__dirname, "Public", "book"))
+);
 
 //#region API ROUTES
 
@@ -30,6 +39,12 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
+
+app.use("/api/auth", router.auth);
+app.use("/api/admins", router.admin);
+app.use("/api/users", router.user);
+app.use("/api/book", router.book);
+app.use("/api/genre", router.genre);
 
 // ===========================
 

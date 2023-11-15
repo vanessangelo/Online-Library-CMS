@@ -12,9 +12,19 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "express-validator": "^7.0.1",
+    "handlebars": "^4.7.8",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.3",
+    "nodemailer": "^6.9.7",
+    "sequelize": "^6.35.0",
+    "sequelize-cli": "^6.6.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
