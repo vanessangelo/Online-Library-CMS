@@ -3,6 +3,7 @@ const book = require("./bookController");
 const admin = require("./adminController");
 const user = require("./userController");
 const genre = require("./genreController");
+const author = require("./authorController");
 
 module.exports = {
   auth,
@@ -10,4 +11,5 @@ module.exports = {
   admin,
   user,
   genre,
+  author
 };
