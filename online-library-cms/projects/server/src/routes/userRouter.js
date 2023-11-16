@@ -6,6 +6,11 @@ router.use(authMiddleware.verifyToken);
 
 router.get("/profile", userController.getProfile);
 router.get(
+  "/borrow-histories",
+  authMiddleware.verifyUser,
+  userController.getBorrowHistory
+);
+router.get(
   "/borrow-histories/active",
   authMiddleware.verifyUser,
   userController.getOneBorrowingBook

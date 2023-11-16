@@ -136,48 +136,42 @@ module.exports = {
       perPage: 8,
       search: req.query.search || "",
       genre: req.query.filterGenre || "",
-      publicationYear: req.query.sortPublicationYear,
     };
 
     try {
-      const where = {};
-      let order = [["createdAt", "DESC"]];
+      const where = { userId: req.user.id };
 
       if (pagination.search) {
         where[db.Sequelize.Op.or] = [
-          { title: { [db.Sequelize.Op.like]: `%${pagination.search}%` } },
+          {"$Book.title$": { [db.Sequelize.Op.like]: `%${pagination.search}%` } },
           {
-            "$Author.name$": {
+            "$Book.Author.name$": {
               [db.Sequelize.Op.like]: `%${pagination.search}%`,
             },
           },
         ];
       }
       if (pagination.genre) {
-        where.genreId = pagination.genre;
-      }
-      if (pagination.publicationYear) {
-        order = [];
-        if (pagination.publicationYear.toUpperCase() === "DESC") {
-          order.push(["publicationYear", "DESC"]);
-        } else {
-          order.push(["publicationYear", "ASC"]);
-        }
+        where['$Book.genreId$'] = pagination.genre
       }
 
-      const results = await db.Book.findAndCountAll({
+      const results = await db.Borrow_History.findAndCountAll({
         where,
         include: [
           {
-            model: db.Genre,
-          },
-          {
-            model: db.Author,
+            model: db.Book,
+            include: [
+              {
+                model: db.Author,
+              },
+              {
+                model: db.Genre,
+              },
+            ],
           },
         ],
         limit: pagination.perPage,
         offset: (pagination.page - 1) * pagination.perPage,
-        order,
       });
 
       const totalCount = results.count;
@@ -185,7 +179,7 @@ module.exports = {
 
       if (results.rows.length === 0) {
         return res.status(200).send({
-          message: "No books found",
+          message: "No borrow history(s) found",
         });
       }
 
@@ -213,12 +207,10 @@ module.exports = {
         },
       });
 
-      res
-        .status(200)
-        .send({
-          message: "Succcessfully retrieved ongoing book",
-          data: getBorrowingBook || {},
-        });
+      res.status(200).send({
+        message: "Succcessfully retrieved ongoing book",
+        data: getBorrowingBook || {},
+      });
     } catch (error) {
       console.log(error);
       res.status(500).send({
