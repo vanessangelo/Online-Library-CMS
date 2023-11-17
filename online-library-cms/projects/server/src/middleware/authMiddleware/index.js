@@ -49,6 +49,7 @@ module.exports = {
   },
 
   async verifyAdmin(req, res, next) {
+    console.log("kena verifyAdmin")
     if (req.user.role === "admin") {
       return next();
     }
@@ -58,6 +59,7 @@ module.exports = {
   },
 
   async verifyUser(req, res, next) {
+    console.log("kena verifyUser")
     if (req.user.role === "user") {
       return next();
     }

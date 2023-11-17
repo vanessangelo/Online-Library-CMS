@@ -74,20 +74,6 @@ const checkGenreUnique = async (value, { req }) => {
   }
 };
 
-const checkGenreUniqueOptional = async (value, { req }) => {
-  try {
-    if (value) {
-      const genre = await db.Genre.findOne({ where: { name: value } });
-      if (genre) {
-        throw new Error("Genre already exist");
-      }
-    }
-    return true;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
 const checkValidGenre = async (value, { req }) => {
   try {
     const genre = await db.Genre.findOne({
