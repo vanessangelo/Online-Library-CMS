@@ -6,5 +6,6 @@ router.use(authMiddleware.verifyToken)
 
 router.patch("/borrow-histories/:id/:action", authMiddleware.verifyAdmin, adminController.requestApproval)
 router.get("/borrow-histories", authMiddleware.verifyAdmin, adminController.getBorrowHistory)
+router.get("/users", authMiddleware.verifyAdmin, adminController.getAllUser)
 
 module.exports = router;

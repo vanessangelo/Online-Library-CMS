@@ -91,6 +91,22 @@ const handleReturnApproval = async (id, transaction, res) => {
 };
 
 module.exports = {
+  async getAllUser(req, res) {
+    try {
+      const users = await db.User.findAll({
+        where: {
+          role: "user"
+        }
+      })
+
+      res.status(200).send({message: "Successfully retrieved users", data: users})
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        message: "Internal Server Error",
+      });
+    }
+  },
   async requestApproval(req, res) {
     const transaction = await db.sequelize.transaction();
     const { id, action } = req.params;
@@ -159,6 +175,7 @@ module.exports = {
 
       const results = await db.Borrow_History.findAndCountAll({
         where,
+        attributes: ["id", "userId", "bookId", "issuedDate", "returnedDate", "status"],
         include: [
           {
             model: db.Book,
@@ -171,7 +188,11 @@ module.exports = {
               },
             ],
           },
+          {
+            model: db.User,
+          }
         ],
+        order: [["createdAt", "DESC"]],
         limit: pagination.perPage,
         offset: (pagination.page - 1) * pagination.perPage,
       });

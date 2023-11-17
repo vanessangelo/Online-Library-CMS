@@ -170,6 +170,7 @@ module.exports = {
             ],
           },
         ],
+        order: [["createdAt", "DESC"]],
         limit: pagination.perPage,
         offset: (pagination.page - 1) * pagination.perPage,
       });
@@ -205,6 +206,20 @@ module.exports = {
             [db.Sequelize.Op.or]: ["Queued", "Borrowed", "Pending"],
           },
         },
+        attributes: ["id", "userId", "bookId", "issuedDate", "returnedDate", "status"],
+        include: [
+          {
+            model: db.Book,
+            include: [
+              {
+                model: db.Author,
+              },
+              {
+                model: db.Genre,
+              },
+            ],
+          },
+        ],
       });
 
       res.status(200).send({

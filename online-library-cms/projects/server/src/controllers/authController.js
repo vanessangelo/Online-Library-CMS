@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport({
 
 module.exports = {
   async login(req, res) {
+    console.log("ini data masuk server", req.body)
     try {
       const { credential, password } = req.body;
 
@@ -29,7 +30,7 @@ module.exports = {
       });
 
       if (!user) {
-        return res.status(401).send({ message: "User not found" });
+        return res.status(404).send({ message: "User not found" });
       }
 
       const isPassMatch = await bcrypt.compare(password, user.password);
@@ -44,9 +45,9 @@ module.exports = {
         );
         return res
           .status(200)
-          .send({ message: "Successful login", accessToken: token });
+          .send({ message: "Successful login", user: {name: user.name, email: user.email, username: user.username, role: user.role}, accessToken: token });
       } else {
-        return res.status(401).send({ message: "Invalid credential" });
+        return res.status(400).send({ message: "Invalid credential" });
       }
     } catch (error) {
       console.log(error.message);
